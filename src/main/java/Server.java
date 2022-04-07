@@ -54,10 +54,10 @@ public class Server {
 
     public void readMessage(SelectionKey key) throws IOException {
         SocketChannel client = (SocketChannel) key.channel();
-        ByteBuffer byteBuffer = ByteBuffer.allocate(16);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(256);
         client.read(byteBuffer);
         String message = new String(byteBuffer.array());
-        System.out.println("New message: " + message);
+        System.out.println("New message: " + message.trim());
 
         // изменяем режим работы буфера
         byteBuffer.flip();
@@ -65,5 +65,9 @@ public class Server {
         client.write(byteBuffer);
         // очищаем буфер
         byteBuffer.clear();
+
+        if (message.equals("quit")) {
+            client.close();
+        }
     }
 }
